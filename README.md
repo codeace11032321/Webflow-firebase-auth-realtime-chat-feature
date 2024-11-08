@@ -1,3 +1,5 @@
+## chat testing
+https://vintage-car-market----testing.webflow.io/chat
 
 ## Building and running on localhost
 
@@ -7,6 +9,7 @@ First, install dependencies:
 
 ```sh
 yarn
+yarn add firebase
 ```
 
 To launch a local dev server:
