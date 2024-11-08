@@ -332,9 +332,8 @@ function updateUIWithUserProfile(userProfile) {
   if (nameElement) nameElement.textContent = userProfile.name || ''
   if (profilePicElement) profilePicElement.src = userProfile.pictureUrl || ''
   if (navprofileElement)
-    navprofileElement.style.backgroundImage = `url(${
-      userProfile.pictureUrl || ''
-    })`
+    navprofileElement.style.backgroundImage = `url(${userProfile.pictureUrl || ''
+      })`
   if (emailElement) emailElement.textContent = userProfile.email || ''
   if (bioElement) bioElement.textContent = userProfile.bio || ''
 }
@@ -493,9 +492,8 @@ onSnapshot(messagesQuery, (querySnapshot) => {
     const messageElement = document.createElement('div')
     messageElement.classList.add('message', messageClass)
     messageElement.innerHTML = `
-  <img src="${
-    msg.photoURL || 'default_image_url'
-  }" alt="User Avatar" style="width: 40px; height: 40px; border-radius: 50%;" />
+  <img src="${msg.photoURL || 'default_image_url'
+      }" alt="User Avatar" style="width: 40px; height: 40px; border-radius: 50%;" />
   <p>${msg.text}</p>
   `
     messagesList.appendChild(messageElement)
@@ -505,3 +503,10 @@ onSnapshot(messagesQuery, (querySnapshot) => {
 
 // Add event listener to the form
 messageForm.addEventListener('submit', sendMessage)
+
+
+if (messageForm) {
+  messageForm.addEventListener('submit', sendMessage)
+} else {
+  console.warn('Message form not found, listener not added.')
+}
