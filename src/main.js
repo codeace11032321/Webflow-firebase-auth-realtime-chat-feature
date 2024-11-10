@@ -197,32 +197,57 @@ async function handleOnboardingSubmit(e) {
   }
 }
 
+
 async function handleOnboarding(uid) {
-  const name = document.getElementById('onboarding-name').value
-  const bio = document.getElementById('onboarding-bio').value
-
-  const docSnapshot = await getDoc(doc(firestore, 'users', uid))
-  const pictureUrl = docSnapshot.exists()
-    ? docSnapshot.data().profilePicUrl
-    : 'https://cdn.prod.website-files.com/660b73627785bc0aadaee0c8/660b77e1ab76e57af2b77f88_white-profile-empty%20(1).svg'
-
-  const userProfile = {
-    name,
-    email: auth.currentUser.email,
-    pictureUrl,
-    bio,
-    uid,
-    createdAt: new Date(),
-  }
+  const name = document.getElementById('onboarding-name').value;
+  const bio = document.getElementById('onboarding-bio').value;
+  const address = document.getElementById('uaddress').value;
 
   try {
-    await setDoc(doc(firestore, 'users', uid), userProfile)
-    console.log('User profile created successfully!')
-    window.location.href = '/verification'
+    // Fetch user data from Firestore
+    const docSnapshot = await getDoc(doc(firestore, 'users', uid));
+    const pictureUrl = docSnapshot.exists()
+      ? docSnapshot.data().profilePicUrl
+      : 'https://cdn.prod.website-files.com/660b73627785bc0aadaee0c8/660b77e1ab76e57af2b77f88_white-profile-empty%20(1).svg';
+
+    // Prepare user profile object
+    const userProfile = {
+      name,
+      email: auth.currentUser.email,
+      pictureUrl,
+      bio,
+      uid,
+      address,
+      createdAt: new Date(),
+    };
+
+    // Save to Firestore
+    await setDoc(doc(firestore, 'users', uid), userProfile);
+    console.log('User profile created successfully!');
+
+    // Create Webflow item through backend API
+    const response = await fetch('/create-item', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userProfile),
+    });
+
+    if (!response.ok) {
+      throw new Error('Error creating Webflow item');
+    }
+
+    console.log('Webflow item created successfully!');
+
+    // Optionally redirect to verification page
+    // window.location.href = '/verification'; 
+
   } catch (error) {
-    console.error('Error creating user profile:', error)
+    console.error('Error creating user profile or Webflow item:', error);
   }
 }
+
 
 // ============================/////============================///
 // Utility Functions
@@ -503,7 +528,6 @@ onSnapshot(messagesQuery, (querySnapshot) => {
 
 // Add event listener to the form
 messageForm.addEventListener('submit', sendMessage)
-
 
 if (messageForm) {
   messageForm.addEventListener('submit', sendMessage)
